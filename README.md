@@ -15,3 +15,6 @@ Python3.7以上
 NGWORDS.txtはmain.pyと同じディレクトリに配置してください。
 1. config.sample.iniにトークンを記述し、ファイル名をconfig.iniに変更してください。
 1. main.pyを起動してください。
+
+## ライセンス
+MIT License
