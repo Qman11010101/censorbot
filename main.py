@@ -1,10 +1,18 @@
 import configparser
 import discord
 import re
+import os
 
-with open("config.ini", mode="r", encoding="utf-8_sig") as cfg:
-    config = configparser.ConfigParser()
-    config.read_file(cfg)
+if os.path.isfile("config.ini"):
+    with open("config.ini", mode="r", encoding="utf-8_sig") as cfg:
+        config = configparser.ConfigParser()
+        config.read_file(cfg)
+
+        replacetext = config["main"].get("replacetext")
+        token = config["main"]["token"]
+else:
+    replacetext = os.environ.get("replacetext")
+    token = os.environ.get("token")
 
 client = discord.Client()
 
@@ -21,7 +29,7 @@ def checkNgWord(text):
             return True
     return False
 
-def replaceNgWord(text, replacedText="[検閲済]"):
+def replaceNgWord(text, replacedText):
     for ngword in NGWORDS:
         text = re.sub(ngword, replacedText, text).strip()
     return text
@@ -32,7 +40,7 @@ async def on_message(message):
         return
     if checkNgWord(message.content):
         await message.delete()
-        await message.channel.send(f"{message.author.display_name}が発言しました:\n {replaceNgWord(message.content, config['main'].get('replacetext'))}")
+        await message.channel.send(f"{message.author.display_name}が発言しました:\n {replaceNgWord(message.content, replacetext)}")
 
 
-client.run(config["main"]["token"])
+client.run(token)
